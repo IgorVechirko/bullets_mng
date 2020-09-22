@@ -33,7 +33,7 @@ namespace BulletsMng
 
 
 		virtual void switchToScene( const std::string& newSceneID ) override;
-		virtual sf::Vector2u getWindowSize() override;
+		virtual sf::Vector2u getWindowSize() const override;
 
 	public:
 		

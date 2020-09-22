@@ -19,7 +19,7 @@ namespace BulletsMng
 			_newSceneName = newSceneID;
 		}
 	}
-	sf::Vector2u Application::getWindowSize()
+	sf::Vector2u Application::getWindowSize() const
 	{
 		return _window->getSize();
 	}

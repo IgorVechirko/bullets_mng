@@ -20,10 +20,10 @@ namespace BulletsMng
 		//_bulletsMng->addWall( glm::vec2( 0.0f, 200.0f ), glm::vec2( 1124.0f, 200.0f ) );
 
 		std::default_random_engine dre;
-		std::uniform_real_distribution<float> xGen( 0.0f, getApplication()->getWindowSize().x );
-		std::uniform_real_distribution<float> yGen( 0.0f, getApplication()->getWindowSize().y );
+		std::uniform_real_distribution<float> xGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().x) );
+		std::uniform_real_distribution<float> yGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().y) );
 
-		int wallsAmount = 100;
+		int wallsAmount = 1000;
 		for( int wallNum = 0; wallNum < wallsAmount; wallNum++ )
 			_bulletsMng.addWall( glm::vec2( xGen(dre), yGen(dre) ), glm::vec2( xGen(dre), yGen(dre) ) );
 	}
@@ -42,7 +42,7 @@ namespace BulletsMng
 
 		std::uniform_real_distribution<float> fireTimeGen( 2.0f, 15.0f );
 			
-		int bulletsAmount = 50;
+		int bulletsAmount = 400;
 
 		for( int i = 0; i < bulletsAmount; i++ )
 		{
@@ -74,7 +74,7 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::update( float deltaTime )
 	{
-		_bulletsMng.update( deltaTime * 5.0f );
+		_bulletsMng.update( deltaTime * 2.0f );
 	}
 	void BulletsMngDisplayScene::onWallAdded( int id, const glm::vec2& p1, const glm::vec2& p2 )
 	{
@@ -101,7 +101,7 @@ namespace BulletsMng
 		auto point = createRunderedUnit<Point>();
 		if ( point )
 		{
-			Console::log( "bullet ", id, " added to position ", pos.x, " ", pos.y );
+			//Console::log( "bullet ", id, " added to position ", pos.x, " ", pos.y );
 
 			point->getShape().setFillColor( sf::Color::Blue );
 			point->getShape().setRadius( 5 );

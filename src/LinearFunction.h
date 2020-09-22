@@ -17,7 +17,7 @@ namespace BulletsMng
 
 		void initWithTwoPoints( const glm::vec2& p1, const glm::vec2& p2 );
 
-		bool isParallel( const LinearFunction& other ) const;//const every where
+		bool isParallel( const LinearFunction& other ) const;
 
 		glm::vec2 crossPoint( const LinearFunction& other ) const;
 	};

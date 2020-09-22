@@ -14,10 +14,10 @@ namespace BulletsMng
 	BulletsManager::~BulletsManager()
 	{
 	}
-	bool BulletsManager::isPointInSegment( const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& point )
+	bool BulletsManager::isPointInSegment( const glm::vec2& s1, const glm::vec2& s2, const glm::vec2& point ) const
 	{
-		auto Xrange = std::minmax( p1.x, p2.x );
-		auto Yrange = std::minmax( p1.y, p2.y );
+		const auto& Xrange = std::minmax( s1.x, s2.x );
+		const auto& Yrange = std::minmax( s1.y, s2.y );
 
 		auto epsilon = 0.1f;
 		
@@ -161,11 +161,7 @@ namespace BulletsMng
 		if ( findWallIt != _walls.end() && findBulletIt != _flyingBullets.end() )
 		{
 			glm::vec2 wallNormal = glm::normalize( glm::vec2( findWallIt->linearFunction.Acoef, findWallIt->linearFunction.Bcoef ) );
-			
-			//auto projectionOnWallNormall = glm::dot( wallNormal, findBulletIt->dir );
-			//projectionOnWallNormall = -abs(projectionOnWallNormall);
 
-			//findBulletIt->dir = glm::normalize( findBulletIt->dir - projectionOnWallNormall*2.0f*wallNormal );
 			findBulletIt->dir = glm::reflect( findBulletIt->dir, wallNormal );
 
 			removedWallId = findWallIt->id;
@@ -245,7 +241,7 @@ namespace BulletsMng
 	}
 	void BulletsManager::update( float deltaTime )
 	{
-		float lastBulletsPosForTime = _time;// rename;
+		float lastBulletsPosCalculationStamp = _time;// rename;
 
 		_time += deltaTime;
 
@@ -255,7 +251,7 @@ namespace BulletsMng
 		{
 			if ( _earliestCollision.exist() && _earliestCollision.time <= _time )
 			{
-				lastBulletsPosForTime = _earliestCollision.time;
+				lastBulletsPosCalculationStamp = _earliestCollision.time;
 
 				moveBulletsLinearTillTime( _earliestCollision.time );
 				doCollision( _earliestCollision );
@@ -289,10 +285,10 @@ namespace BulletsMng
 			else
 			{
 				moveBulletsLinearTillTime( _time );
-				lastBulletsPosForTime = _time;
+				lastBulletsPosCalculationStamp = _time;
 			}
 
-		} while( abs( lastBulletsPosForTime - _time ) > std::numeric_limits<float>::epsilon() );
+		} while( abs( lastBulletsPosCalculationStamp - _time ) > std::numeric_limits<float>::epsilon() );
 
 		for( auto listener : _listeners )
 		{

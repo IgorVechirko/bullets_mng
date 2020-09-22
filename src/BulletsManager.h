@@ -15,9 +15,9 @@ namespace BulletsMng
 			glm::vec2 p1;
 			glm::vec2 p2;
 
-			int id;
-
 			LinearFunction linearFunction;
+
+			int id;
 
 			Wall()
 				: id( -1 )
@@ -99,7 +99,10 @@ namespace BulletsMng
 		Collision _earliestCollision;
 
 
-		bool isPointInSegment( const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& point );
+
+
+
+		bool isPointInSegment( const glm::vec2& s1, const glm::vec2& s2, const glm::vec2& point ) const;
 
 		void shootNewBullets();
 
@@ -124,7 +127,6 @@ namespace BulletsMng
 		void fire( const glm::vec2& pos, const glm::vec2& dir, float speed, float shotTime, float lifeTime );
 
 		void update( float deltaTime );
-
 
 	};
 
