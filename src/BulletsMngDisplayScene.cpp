@@ -23,7 +23,7 @@ namespace BulletsMng
 		std::uniform_real_distribution<float> xGen( 0.0f, getApplication()->getWindowSize().x );
 		std::uniform_real_distribution<float> yGen( 0.0f, getApplication()->getWindowSize().y );
 
-		int wallsAmount = 10;
+		int wallsAmount = 100;
 		for( int wallNum = 0; wallNum < wallsAmount; wallNum++ )
 			_bulletsMng.addWall( glm::vec2( xGen(dre), yGen(dre) ), glm::vec2( xGen(dre), yGen(dre) ) );
 	}
@@ -42,7 +42,7 @@ namespace BulletsMng
 
 		std::uniform_real_distribution<float> fireTimeGen( 2.0f, 15.0f );
 			
-		int bulletsAmount = 10;
+		int bulletsAmount = 50;
 
 		for( int i = 0; i < bulletsAmount; i++ )
 		{
@@ -52,20 +52,29 @@ namespace BulletsMng
 			auto fireTime = fireTimeGen(dre);
 			auto lifeTime = lifeTimeGen(dre);
 
-			if ( i == 4 )
+			//if ( i == 4 )
 				_bulletsMng.fire( pos, dir, speed, fireTime, lifeTime );
 		}
 	}
 	void BulletsMngDisplayScene::onOpened()
 	{
+		_earliestCollision = createRunderedUnit<Point>();
+		if ( _earliestCollision )
+		{
+			_earliestCollision->getShape().setOrigin( 10, 10 );
+			_earliestCollision->getShape().setFillColor( sf::Color::Red );
+			_earliestCollision->getShape().setRadius( 0 );
+		}
+
 		_bulletsMng.addBulletsManagerListener( this );
 
 		generateWalls();
 		generateBullets();
+
 	}
 	void BulletsMngDisplayScene::update( float deltaTime )
 	{
-		_bulletsMng.update( deltaTime * 20.7f );
+		_bulletsMng.update( deltaTime * 5.0f );
 	}
 	void BulletsMngDisplayScene::onWallAdded( int id, const glm::vec2& p1, const glm::vec2& p2 )
 	{
@@ -117,6 +126,19 @@ namespace BulletsMng
 		{
 			removeRenderedUnit( findIt->second );
 			_bulletsVisual.erase( findIt );
+		}
+	}
+	void BulletsMngDisplayScene::noEarliestCollision()
+	{
+		if ( _earliestCollision )
+			_earliestCollision->getShape().setRadius( 0 );
+	}
+	void BulletsMngDisplayScene::onNewEarliestCollision( int bulletID, int wallID, const glm::vec2 pos )
+	{
+		if ( _earliestCollision )
+		{
+			_earliestCollision->getShape().setPosition( pos.x, getApplication()->getWindowSize().y - pos.y );
+			_earliestCollision->getShape().setRadius( 10 );
 		}
 	}
 

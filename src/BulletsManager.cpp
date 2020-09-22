@@ -56,10 +56,24 @@ namespace BulletsMng
 		{
 			auto earliestCollistionForBullet = getEarliestCollision( bullet );
 
-			if ( !_earliestCollision.exist() || _earliestCollision.time > earliestCollistionForBullet.time )
+			if( earliestCollistionForBullet.exist() )
 			{
-				_earliestCollision = earliestCollistionForBullet;
+				if ( !_earliestCollision.exist() || _earliestCollision.time > earliestCollistionForBullet.time )
+				{
+					_earliestCollision = earliestCollistionForBullet;
+				}
 			}
+		}
+
+		if ( _earliestCollision.exist() )
+		{
+			for( auto listener : _listeners )
+				listener->onNewEarliestCollision( _earliestCollision.bulletID, _earliestCollision.wallID, _earliestCollision.collisionPoint );
+		}
+		else
+		{
+			for( auto listener : _listeners )
+				listener->noEarliestCollision();
 		}
 
 		std::move( shotedBullets.begin(), shotedBullets.end(), std::inserter( _flyingBullets,_flyingBullets.end() ) );
@@ -89,6 +103,7 @@ namespace BulletsMng
 						result.bulletID = bullet.id;
 						result.wallID = wall.id;
 						result.time = collisionTime;
+						result.collisionPoint = crossPoint;
 					}
 				}
 			}
@@ -258,6 +273,17 @@ namespace BulletsMng
 							_earliestCollision = earliestCollistionForBullet;
 						}
 					}
+				}
+
+				if ( _earliestCollision.exist() )
+				{
+					for( auto listener : _listeners )
+						listener->onNewEarliestCollision( _earliestCollision.bulletID, _earliestCollision.wallID, _earliestCollision.collisionPoint );
+				}
+				else
+				{
+					for( auto listener : _listeners )
+						listener->noEarliestCollision();
 				}
 			}
 			else

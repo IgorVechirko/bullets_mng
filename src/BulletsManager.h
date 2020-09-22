@@ -60,7 +60,7 @@ namespace BulletsMng
 			int wallID;
 
 			float time;
-			// glm::vec2 collisionPoint;
+			glm::vec2 collisionPoint;
 
 			Collision()
 				: bulletID( -1 )

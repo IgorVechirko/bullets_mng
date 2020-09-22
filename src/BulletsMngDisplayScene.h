@@ -19,6 +19,7 @@ namespace BulletsMng
 		std::map<int,Line*> _wallsVisual;
 		std::map<int,Point*> _bulletsVisual;
 
+		Point* _earliestCollision;
 
 
 		void generateWalls();
@@ -37,6 +38,8 @@ namespace BulletsMng
 		virtual void onBulletAdded( int id, const glm::vec2& pos );
 		virtual void onBulletChangePos( int id, const glm::vec2& newPos );
 		virtual void onBulletDeleted( int id );
+		virtual void noEarliestCollision();
+		virtual void onNewEarliestCollision( int bulletID, int wallID, const glm::vec2 pos );
 
 	public:
 
