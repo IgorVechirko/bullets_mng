@@ -19,8 +19,14 @@ namespace BulletsMng
 			_newSceneName = newSceneID;
 		}
 	}
+	sf::Vector2u Application::getWindowSize()
+	{
+		return _window->getSize();
+	}
 	void Application::run()
 	{
+		_lasUpdateTime = std::chrono::steady_clock::now();
+
 		_scenesCreateFunc[ "mng_display" ] = [this](){ return new BulletsMngDisplayScene(this); };
 
 		switchToScene( "mng_display" );
@@ -56,6 +62,13 @@ namespace BulletsMng
 
 				_newSceneName.clear();
 			}
+
+			auto nowTimePoint = std::chrono::steady_clock::now();
+			auto deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>( nowTimePoint - _lasUpdateTime );
+			_lasUpdateTime = nowTimePoint;
+
+			if ( _currentScene )
+				_currentScene->update( deltaTime.count() );
 
 			_window->clear( sf::Color( 119, 136, 153, 255 ) );
 

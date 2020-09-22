@@ -1,14 +1,14 @@
 #include "SceneBase.h"
 
-#include "IScenesSwitcher.h"
+#include "IApplication.h"
 #include "RenderedUnit.h"
 
 
 namespace BulletsMng
 {
 
-	SceneBase::SceneBase( IScenesSwitcher* switcher )
-		: _scenesSwitcher( switcher )
+	SceneBase::SceneBase( IApplication* application )
+		: _application( application )
 	{
 	}
 	SceneBase::~SceneBase()
@@ -32,9 +32,9 @@ namespace BulletsMng
 			renderedUnit->draw( window );
 
 	}
-	void SceneBase::switchToScene( const std::string& newSceneID )
+	IApplication* SceneBase::getApplication()
 	{
-		if ( _scenesSwitcher )
-			_scenesSwitcher->switchToScene( newSceneID );
+		assert( _application );
+		return _application;
 	}
 }

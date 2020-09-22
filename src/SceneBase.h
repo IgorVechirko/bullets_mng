@@ -6,17 +6,17 @@
 namespace BulletsMng
 {
 	class RenderedUnit;
-	class IScenesSwitcher;
+	class IApplication;
 	class SceneBase
 	{
-		IScenesSwitcher* _scenesSwitcher;
+		IApplication* _application;
 
 		std::vector<std::unique_ptr<RenderedUnit>> _renderedUnits;
 
 
 	public:
 
-		SceneBase( IScenesSwitcher* switcher );
+		SceneBase( IApplication* application );
 		virtual ~SceneBase();
 		MAKE_UNCOPYABLE( SceneBase );
 
@@ -34,9 +34,11 @@ namespace BulletsMng
 		void removeRenderedUnit( RenderedUnit* unit );
 
 
+		virtual void update( float deltaTime ){};
+
 		void render( sf::RenderWindow* window );
 
-		void switchToScene( const std::string& newSceneID );
+		IApplication* getApplication();
 
 	};
 

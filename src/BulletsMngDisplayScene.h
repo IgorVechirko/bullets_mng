@@ -2,21 +2,49 @@
 #define BulletsMngDisplayScene_H
 
 #include "SceneBase.h"
+#include "BulletsManager.h"
+#include "BulletsManagerListener.h"
 
 namespace BulletsMng
 {
-
+	class Line;
+	class Point;
 	class BulletsMngDisplayScene
 		: public SceneBase
+		, public BulletsManagerListener
 	{
+
+		BulletsManager _bulletsMng;
+
+		std::map<int,Line*> _wallsVisual;
+		std::map<int,Point*> _bulletsVisual;
+
+
+
+		void generateWalls();
+		void generateBullets();
+
+
+	protected:
+
+		virtual void onOpened() override;
+
+		virtual void update( float deltaTime ) override;
+
+		//BulletsManagerListener
+		virtual void onWallAdded( int id, const glm::vec2& p1, const glm::vec2& p2 );
+		virtual void onWallDeleted( int id );
+		virtual void onBulletAdded( int id, const glm::vec2& pos );
+		virtual void onBulletChangePos( int id, const glm::vec2& newPos );
+		virtual void onBulletDeleted( int id );
 
 	public:
 
-		BulletsMngDisplayScene( IScenesSwitcher* switcher );
+		BulletsMngDisplayScene( IApplication* switcher );
 		virtual ~BulletsMngDisplayScene();
 		MAKE_UNCOPYABLE( BulletsMngDisplayScene );
 
-		virtual void onOpened() override;
+		
 
 
 	};

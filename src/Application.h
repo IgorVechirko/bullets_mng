@@ -2,14 +2,14 @@
 #define Application_H
 
 #include "Common.h"
-#include "IScenesSwitcher.h"
+#include "IApplication.h"
 
 namespace BulletsMng
 {
 
 	class SceneBase;
 	class Application
-		: public IScenesSwitcher
+		: public IApplication
 	{
 		typedef std::function<SceneBase*()> createSceneFunc;
 
@@ -18,6 +18,8 @@ namespace BulletsMng
 		std::string _newSceneName;
 
 		std::unique_ptr<sf::RenderWindow> _window;
+
+		std::chrono::time_point<std::chrono::steady_clock> _lasUpdateTime;
 
 
 	protected:
@@ -31,6 +33,7 @@ namespace BulletsMng
 
 
 		virtual void switchToScene( const std::string& newSceneID ) override;
+		virtual sf::Vector2u getWindowSize() override;
 
 	public:
 		

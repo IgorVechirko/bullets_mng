@@ -15,16 +15,21 @@ set( BUILD_SHARED_LIBS FALSE CACHE BOOL "" FORCE )
 add_subdirectory( ${BULLETS_MNG_DIR}/externals/SFML )
 set( SFML_INCLUDE_DIR ${BULLETS_MNG_DIR}/externals/SFML/include )
 
+add_subdirectory( ${BULLETS_MNG_DIR}/externals/glm )
+
 
 set( entry_point ${BULLETS_MNG_SRC_DIR}/main.cpp )
 set( Application ${BULLETS_MNG_SRC_DIR}/Application.h ${BULLETS_MNG_SRC_DIR}/Application.cpp )
 set( Common ${BULLETS_MNG_SRC_DIR}/Common.h )
-set( IScenesSwitcher ${BULLETS_MNG_SRC_DIR}/IScenesSwitcher.h )
+set( IApplication ${BULLETS_MNG_SRC_DIR}/IApplication.h )
 set( SceneBase ${BULLETS_MNG_SRC_DIR}/SceneBase.h ${BULLETS_MNG_SRC_DIR}/SceneBase.cpp )
 set( RenderedUnit ${BULLETS_MNG_SRC_DIR}/RenderedUnit.h ${BULLETS_MNG_SRC_DIR}/RenderedUnit.cpp )
 set( BulletsMngDisplayScene ${BULLETS_MNG_SRC_DIR}/BulletsMngDisplayScene.h ${BULLETS_MNG_SRC_DIR}/BulletsMngDisplayScene.cpp )
 set( Line ${BULLETS_MNG_SRC_DIR}/Line.h ${BULLETS_MNG_SRC_DIR}/Line.cpp )
 set( Point ${BULLETS_MNG_SRC_DIR}/Point.h ${BULLETS_MNG_SRC_DIR}/Point.cpp )
+set( BulletsManager ${BULLETS_MNG_SRC_DIR}/BulletsManager.h ${BULLETS_MNG_SRC_DIR}/BulletsManager.cpp )
+set( BulletsManagerListener ${BULLETS_MNG_SRC_DIR}/BulletsManagerListener.h )
+set( LinearFunction ${BULLETS_MNG_SRC_DIR}/LinearFunction.h ${BULLETS_MNG_SRC_DIR}/LinearFunction.cpp )
 
 source_group( main FILES 
                         ${entry_point} 
@@ -32,11 +37,11 @@ source_group( main FILES
 
 source_group( application FILES 
 							${Application}
+							${IApplication}
 							${Common}
 )
 
 source_group( scene\\base FILES
-						${IScenesSwitcher}
 						${SceneBase}
 )
 source_group( scene FILES
@@ -51,22 +56,31 @@ source_group( rendered_units FILES
 								${Point}
 )
 
+source_group( bullets_mng FILES 
+							${BulletsManager}
+							${BulletsManagerListener}
+							${LinearFunction}
+)
+
 
 set( BULLETS_MNG_SRC 
                     ${entry_point}
 					${Application}
 					${Common}
-					${IScenesSwitcher}
+					${IApplication}
 					${SceneBase}
 					${RenderedUnit}
 					${BulletsMngDisplayScene}
 					${Line}
 					${Point}
+					${BulletsManager}
+					${BulletsManagerListener}
+					${LinearFunction}
 )
 
 add_executable( bullets_mng ${BULLETS_MNG_SRC} )
 
-target_link_libraries( bullets_mng sfml-main sfml-system sfml-window sfml-graphics )
+target_link_libraries( bullets_mng sfml-main sfml-system sfml-window sfml-graphics glm )
 target_include_directories( bullets_mng PRIVATE ${SFML_INCLUDE_DIR} )
 
 if ( MSVC )
