@@ -38,8 +38,9 @@ namespace BulletsMng
 			int bulletID;
 			int wallID;
 
-			glm::vec2 collisionPoint;//????need 
-
+//#ifdef _DEBUG
+			glm::vec2 collisionPoint;
+//#endif
 			float time;
 
 			Collision()
@@ -49,7 +50,7 @@ namespace BulletsMng
 			{
 			}
 
-			bool exist()
+			bool exist() const
 			{
 				return wallID >= 0 && bulletID >= 0;
 			}
@@ -73,7 +74,7 @@ namespace BulletsMng
 
 			float speed;
 			float timeForPos;
-			float finishFlyTime;
+			float finishFlyTime;//44
 
 			Bullet()
 				: speed( 0.0f )
@@ -88,9 +89,10 @@ namespace BulletsMng
 
 
 		std::vector<Wall> _walls;
+		std::set<int> _existingWallsIDs;
 
 		std::recursive_mutex _waitStartFlyBulletsLock;		
-		std::vector<Bullet> _waitStartFlyBullets;
+		std::list<Bullet> _waitStartFlyBullets;
 
 		std::vector<Bullet> _flyingBullets;
 
@@ -99,7 +101,7 @@ namespace BulletsMng
 		int _wallsIDGenerator;
 		int _bulletsIDGenerator;
 
-		std::list<BulletsManagerListener*> _listeners;
+		std::vector<BulletsManagerListener*> _listeners;
 
 		Collision _earliestCollision;
 

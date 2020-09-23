@@ -8,6 +8,7 @@ namespace BulletsMng
 		: Acoef( 0.0f )
 		, Bcoef( 0.0f )
 		, Ccoef( 0.0f )
+		, angleCoef( 0.0f )
 	{
 	}
 
@@ -15,6 +16,7 @@ namespace BulletsMng
 		: Acoef( p1.y - p2.y )
 		, Bcoef( p2.x - p1.x )
 		, Ccoef( p1.x*p2.y - p2.x*p1.y )
+		, angleCoef( Acoef/Bcoef )
 	{
 	}
 
@@ -23,13 +25,12 @@ namespace BulletsMng
 		Acoef = p1.y - p2.y;
 		Bcoef = p2.x - p1.x;
 		Ccoef = p1.x*p2.y - p2.x*p1.y;
+		angleCoef = Acoef/Bcoef;
 	}
 
 	bool LinearFunction::isParallel( const LinearFunction& other ) const
 	{
-		float det = Acoef*other.Bcoef - other.Acoef*Bcoef;
-
-		return abs(det) <= std::numeric_limits<float>::epsilon();
+		return abs(angleCoef - other.angleCoef) <= std::numeric_limits<float>::epsilon();
 	}
 
 	glm::vec2 LinearFunction::crossPoint( const LinearFunction& other ) const

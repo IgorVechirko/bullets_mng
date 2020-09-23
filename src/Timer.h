@@ -21,6 +21,7 @@ namespace BulletsMng
 
 		Timer( const std::string& name = "timer", bool show = true );
 
+		void setIsShow( bool isShow );
 		void stop();
 		std::chrono::steady_clock::duration& getDuration();
 

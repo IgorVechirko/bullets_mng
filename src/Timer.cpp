@@ -10,6 +10,10 @@ namespace BulletsMng
 		, _stoped( false )
 	{
 	}
+	void Timer::setIsShow( bool isShow )
+	{
+		_showInOutput = isShow;
+	}
 	void Timer::stop()
 	{
 		_duration = std::chrono::steady_clock::now() - _startTime;

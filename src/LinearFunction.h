@@ -11,6 +11,7 @@ namespace BulletsMng
 		float Acoef;
 		float Bcoef;
 		float Ccoef;
+		float angleCoef;
 
 		LinearFunction();
 		LinearFunction( const glm::vec2& p1, const glm::vec2& p2 );

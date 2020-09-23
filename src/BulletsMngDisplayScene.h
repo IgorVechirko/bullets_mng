@@ -21,6 +21,8 @@ namespace BulletsMng
 
 		Point* _earliestCollision;
 
+		std::vector<std::unique_ptr<std::thread>> _shotedThreads;
+
 
 		void generateWalls();
 		void generateBullets();

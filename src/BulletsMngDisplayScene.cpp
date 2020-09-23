@@ -23,7 +23,7 @@ namespace BulletsMng
 		std::uniform_real_distribution<float> xGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().x) );
 		std::uniform_real_distribution<float> yGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().y) );
 
-		int wallsAmount = 1000;
+		int wallsAmount = 40;
 		for( int wallNum = 0; wallNum < wallsAmount; wallNum++ )
 			_bulletsMng.addWall( glm::vec2( xGen(dre), yGen(dre) ), glm::vec2( xGen(dre), yGen(dre) ) );
 	}
@@ -42,7 +42,12 @@ namespace BulletsMng
 
 		std::uniform_real_distribution<float> fireTimeGen( 2.0f, 15.0f );
 			
-		int bulletsAmount = 400;
+		int bulletsAmount = 20;
+
+		auto threadFunc = []( BulletsManager& mng, glm::vec2 pos, glm::vec2 dir, float speed, float fireTime, float lifeTime ) {
+			std::this_thread::sleep_for( std::chrono::duration<float,std::ratio<1,1>>(fireTime) );
+			mng.fire( pos, dir, speed, fireTime, lifeTime );
+		};
 
 		for( int i = 0; i < bulletsAmount; i++ )
 		{
@@ -52,8 +57,11 @@ namespace BulletsMng
 			auto fireTime = fireTimeGen(dre);
 			auto lifeTime = lifeTimeGen(dre);
 
-			//if ( i == 4 )
-				_bulletsMng.fire( pos, dir, speed, fireTime, lifeTime );
+			_bulletsMng.fire( pos, dir, speed, fireTime, lifeTime );
+
+			//auto thread = new std::thread( threadFunc, std::ref(_bulletsMng), pos, dir, speed, fireTime, lifeTime );
+
+			//_shotedThreads.push_back( std::unique_ptr<std::thread>(thread) );
 		}
 	}
 	void BulletsMngDisplayScene::onOpened()
