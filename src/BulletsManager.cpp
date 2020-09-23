@@ -19,7 +19,7 @@ namespace BulletsMng
 		const auto& Xrange = std::minmax( s1.x, s2.x );
 		const auto& Yrange = std::minmax( s1.y, s2.y );
 
-		auto epsilon = 0.1f;
+		auto epsilon = 0.001f;
 		
 		return Xrange.first - epsilon <= point.x && Xrange.second + epsilon >= point.x && Yrange.first - epsilon <= point.y && Yrange.second + epsilon >= point.y;
 	}
@@ -33,7 +33,7 @@ namespace BulletsMng
 		{
 			if ( _time >= bulletIt->timeForPos )
 			{
-				shotedBullets.push_back(*bulletIt);
+				shotedBullets.push_back(*bulletIt);//copied data
 				bulletIt = _waitStartFlyBullets.erase( bulletIt );
 			}
 			else
@@ -52,15 +52,15 @@ namespace BulletsMng
 			}
 		}
 
-		for( const auto& bullet : shotedBullets )
+		for( auto& bullet : shotedBullets )
 		{
-			auto earliestCollistionForBullet = getEarliestCollision( bullet );
+			calculateBulletFutureCollisions( bullet );
 
-			if( earliestCollistionForBullet.exist() )
+			if ( !bullet.sortedFutureCollisions.empty() )
 			{
-				if ( !_earliestCollision.exist() || _earliestCollision.time > earliestCollistionForBullet.time )
+				if ( !_earliestCollision.exist() || ( _earliestCollision.time >= bullet.sortedFutureCollisions.begin()->time  ) )
 				{
-					_earliestCollision = earliestCollistionForBullet;
+					_earliestCollision = *bullet.sortedFutureCollisions.begin();
 				}
 			}
 		}
@@ -78,38 +78,66 @@ namespace BulletsMng
 
 		std::move( shotedBullets.begin(), shotedBullets.end(), std::inserter( _flyingBullets,_flyingBullets.end() ) );
 	}
-	BulletsManager::Collision BulletsManager::getEarliestCollision( const Bullet& bullet )
+	BulletsManager::Collision BulletsManager::getBulletEarliestCollision( Bullet& bullet )
 	{
 		Collision result;
 
-		auto moveTime = bullet.finishFlyTime - bullet.timeForPos;
-		auto destPoint = bullet.pos + bullet.dir * moveTime * bullet.speed;
-
-		LinearFunction bulletLinearFunc( bullet.pos, destPoint );
-
-		for( const auto& wall : _walls )
+		while( !bullet.sortedFutureCollisions.empty() )
 		{
-			if( !wall.linearFunction.isParallel( bulletLinearFunc ) )
+			if ( isWallExist( bullet.sortedFutureCollisions.begin()->wallID ) )
 			{
-				const auto& crossPoint = wall.linearFunction.crossPoint( bulletLinearFunc );
-
-				if ( isPointInSegment( wall.p1, wall.p2, crossPoint ) && isPointInSegment( bullet.pos, destPoint, crossPoint ) )
-				{
-					float distToCollision = glm::length( crossPoint - bullet.pos );
-					float collisionTime = bullet.timeForPos + distToCollision/bullet.speed;
-
-					if ( !result.exist() || result.time > collisionTime )
-					{
-						result.bulletID = bullet.id;
-						result.wallID = wall.id;
-						result.time = collisionTime;
-						result.collisionPoint = crossPoint;
-					}
-				}
+				result = *bullet.sortedFutureCollisions.begin();
+				break;
+			}
+			else
+			{
+				bullet.sortedFutureCollisions.erase( bullet.sortedFutureCollisions.begin() );
 			}
 		}
 
 		return result;
+	}
+	void BulletsManager::calculateBulletFutureCollisions( Bullet& bullet )
+	{
+		auto moveDist = ( bullet.finishFlyTime - bullet.timeForPos ) * bullet.speed;
+		auto bulletFinishPos = bullet.pos + bullet.dir * moveDist;
+
+		LinearFunction bulletPathLinearFunc( bullet.pos, bulletFinishPos );
+
+		for( const auto& wall : _walls )
+		{
+			if ( !wall.linearFunction.isParallel( bulletPathLinearFunc ) )
+			{
+				auto crossPoint = wall.linearFunction.crossPoint( bulletPathLinearFunc );
+
+				if ( isPointInSegment( wall.p1, wall.p2, crossPoint ) && isPointInSegment( bullet.pos, bulletFinishPos, crossPoint ) )
+				{
+					Collision newCollision;
+					newCollision.bulletID = bullet.id;
+					newCollision.wallID = wall.id;
+					newCollision.collisionPoint = crossPoint;
+
+					float distToCollision = glm::length( crossPoint - bullet.pos );
+					newCollision.time = bullet.timeForPos + distToCollision/bullet.speed;
+
+					auto collisionIt = bullet.sortedFutureCollisions.begin();
+					for( ; collisionIt != bullet.sortedFutureCollisions.end(); collisionIt++ )
+					{
+						if ( collisionIt->time > newCollision.time )
+							break;
+					}
+
+					bullet.sortedFutureCollisions.insert( collisionIt, newCollision );// data copyied
+				}
+			}
+		}
+
+	}
+	bool BulletsManager::isWallExist( int wallID )
+	{
+		return _walls.end() != std::find_if( _walls.begin(), _walls.end(), [wallID](Wall& wall) -> bool {
+			return wallID == wall.id;
+			} );
 	}
 	void BulletsManager::moveBulletsLinearTillTime( float time )
 	{
@@ -166,6 +194,9 @@ namespace BulletsMng
 
 			removedWallId = findWallIt->id;
 			_walls.erase( findWallIt );
+
+			findBulletIt->sortedFutureCollisions.clear();
+			calculateBulletFutureCollisions( *findBulletIt );
 		}
 
 		if( removedWallId != -1 )
@@ -241,7 +272,7 @@ namespace BulletsMng
 	}
 	void BulletsManager::update( float deltaTime )
 	{
-		float lastBulletsPosCalculationStamp = _time;// rename;
+		float lastBulletsCalculatedPosTimeStamp = _time;
 
 		_time += deltaTime;
 
@@ -251,16 +282,16 @@ namespace BulletsMng
 		{
 			if ( _earliestCollision.exist() && _earliestCollision.time <= _time )
 			{
-				lastBulletsPosCalculationStamp = _earliestCollision.time;
+				lastBulletsCalculatedPosTimeStamp = _earliestCollision.time;
 
 				moveBulletsLinearTillTime( _earliestCollision.time );
 				doCollision( _earliestCollision );
 
 				_earliestCollision.reset();
 
-				for( const auto& bullet : _flyingBullets )
+				for( auto& bullet : _flyingBullets )
 				{
-					auto earliestCollistionForBullet = getEarliestCollision( bullet );
+					auto earliestCollistionForBullet = getBulletEarliestCollision( bullet );
 					
 					if ( earliestCollistionForBullet.exist() )
 					{
@@ -285,10 +316,10 @@ namespace BulletsMng
 			else
 			{
 				moveBulletsLinearTillTime( _time );
-				lastBulletsPosCalculationStamp = _time;
+				lastBulletsCalculatedPosTimeStamp = _time;
 			}
 
-		} while( abs( lastBulletsPosCalculationStamp - _time ) > std::numeric_limits<float>::epsilon() );
+		} while( abs( lastBulletsCalculatedPosTimeStamp - _time ) > std::numeric_limits<float>::epsilon() );
 
 		for( auto listener : _listeners )
 		{

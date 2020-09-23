@@ -31,7 +31,7 @@ namespace BulletsMng
 		if ( font.loadFromFile( "arial.ttf" ) )
 		{
 			_text.setFont( font );
-			_text.setString( "Hello world" );
+			_text.setString( "0" );
 		}
 		else
 		{

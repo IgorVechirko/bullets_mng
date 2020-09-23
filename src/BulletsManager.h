@@ -33,34 +33,14 @@ namespace BulletsMng
 			}
 		};
 
-		struct Bullet
-		{
-			glm::vec2 pos;
-			glm::vec2 dir;
-
-			float speed;
-			float timeForPos;
-			float finishFlyTime;
-
-			int id;
-
-			Bullet()
-				: speed( 0.0f )
-				, timeForPos( 0.0f )
-				, finishFlyTime( 0.0f )
-				, id( -1 )
-			{
-			}
-
-		};
-
 		struct Collision
 		{
 			int bulletID;
 			int wallID;
 
+			glm::vec2 collisionPoint;//????need 
+
 			float time;
-			glm::vec2 collisionPoint;
 
 			Collision()
 				: bulletID( -1 )
@@ -82,6 +62,31 @@ namespace BulletsMng
 			}
 		};
 
+		struct Bullet
+		{
+			std::list<Collision> sortedFutureCollisions;
+
+			int id;
+
+			glm::vec2 pos;
+			glm::vec2 dir;
+
+			float speed;
+			float timeForPos;
+			float finishFlyTime;
+
+			Bullet()
+				: speed( 0.0f )
+				, timeForPos( 0.0f )
+				, finishFlyTime( 0.0f )
+				, id( -1 )
+			{
+			}
+
+		};
+
+
+
 		std::vector<Wall> _walls;
 
 		std::recursive_mutex _waitStartFlyBulletsLock;		
@@ -100,13 +105,14 @@ namespace BulletsMng
 
 
 
-
-
 		bool isPointInSegment( const glm::vec2& s1, const glm::vec2& s2, const glm::vec2& point ) const;
 
 		void shootNewBullets();
 
-		Collision getEarliestCollision( const Bullet& bullet );
+		Collision getBulletEarliestCollision( Bullet& bullet );
+		void calculateBulletFutureCollisions( Bullet& bullet );
+
+		bool isWallExist( int wallID );
 
 		void moveBulletsLinearTillTime( float time );
 
