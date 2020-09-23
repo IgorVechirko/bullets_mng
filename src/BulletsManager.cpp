@@ -1,6 +1,7 @@
 #include "BulletsManager.h"
 
 #include "BulletsManagerListener.h"
+#include "Timer.h"
 
 namespace BulletsMng
 {
@@ -272,6 +273,8 @@ namespace BulletsMng
 	}
 	void BulletsManager::update( float deltaTime )
 	{
+		Timer timer( "update method calc time", !_flyingBullets.empty() );
+
 		float lastBulletsCalculatedPosTimeStamp = _time;
 
 		_time += deltaTime;

@@ -23,7 +23,7 @@ namespace BulletsMng
 		std::uniform_real_distribution<float> xGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().x) );
 		std::uniform_real_distribution<float> yGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().y) );
 
-		int wallsAmount = 200;
+		int wallsAmount = 1000;
 		for( int wallNum = 0; wallNum < wallsAmount; wallNum++ )
 			_bulletsMng.addWall( glm::vec2( xGen(dre), yGen(dre) ), glm::vec2( xGen(dre), yGen(dre) ) );
 	}
@@ -38,11 +38,11 @@ namespace BulletsMng
 		std::uniform_real_distribution<float> yGen( getApplication()->getWindowSize().y * 0.25f, getApplication()->getWindowSize().y * 0.75f );
 
 		std::uniform_real_distribution<float> speedGen( 100.0f, 500.0f );
-		std::uniform_real_distribution<float> lifeTimeGen( 5.0f, 50.0f );
+		std::uniform_real_distribution<float> lifeTimeGen( 5.0f, 5.0f );
 
 		std::uniform_real_distribution<float> fireTimeGen( 2.0f, 15.0f );
 			
-		int bulletsAmount = 10;
+		int bulletsAmount = 400;
 
 		for( int i = 0; i < bulletsAmount; i++ )
 		{
