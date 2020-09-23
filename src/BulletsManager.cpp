@@ -26,16 +26,15 @@ namespace BulletsMng
 	}
 	void BulletsManager::shootNewBullets()
 	{
-		std::unique_lock<std::recursive_mutex> lock(_waitStartFlyBulletsLock);
-
 		std::vector<Bullet> shotedBullets;
 
-		for( auto bulletIt = _waitStartFlyBullets.begin(); bulletIt != _waitStartFlyBullets.end(); )
+		std::unique_lock<std::recursive_mutex> lock(_waitStartFlyBulletsLock);
+		for( auto bulletIt = _waitStartFlyBullets.begin(); bulletIt != _waitStartFlyBullets.end(); bulletIt++ )
 		{
 			if ( _time >= bulletIt->timeForPos )
 			{
 				shotedBullets.push_back( *bulletIt );
-				bulletIt = _waitStartFlyBullets.erase( bulletIt );
+				bulletIt->remove = true;
 			}
 			else
 			{
@@ -43,15 +42,14 @@ namespace BulletsMng
 			}
 		}
 
-		lock.unlock();
-
-		for( auto listener : _listeners )
+		if ( !shotedBullets.empty() )
 		{
-			for( const auto& bullet : shotedBullets )
-			{
-				listener->onBulletAdded( bullet.id, bullet.pos );
-			}
+			std::remove_if( _waitStartFlyBullets.begin(), _waitStartFlyBullets.end(), [](Bullet& bullet){
+				return bullet.remove;		
+			} );
+			_waitStartFlyBullets.resize( _waitStartFlyBullets.size() - shotedBullets.size() );
 		}
+		lock.unlock();
 
 		for( auto& bullet : shotedBullets )
 		{
@@ -63,6 +61,14 @@ namespace BulletsMng
 				{
 					_earliestCollision = *bullet.sortedFutureCollisions.begin();
 				}
+			}
+		}
+
+		for( auto listener : _listeners )
+		{
+			for( const auto& bullet : shotedBullets )
+			{
+				listener->onBulletAdded( bullet.id, bullet.pos );
 			}
 		}
 
@@ -78,7 +84,6 @@ namespace BulletsMng
 				listener->noEarliestCollision();
 		}
 #endif
-
 
 		auto neededSize = _flyingBullets.size() + shotedBullets.size();
 		if( _flyingBullets.capacity() < neededSize )
@@ -151,26 +156,29 @@ namespace BulletsMng
 	{
 		std::vector<int> removedBulletsIDs;
 
-		for( auto it = _flyingBullets.begin(); it != _flyingBullets.end(); )
+		for( auto it = _flyingBullets.begin(); it != _flyingBullets.end(); it++ )
 		{
 			auto& bullet = (*it);
 
 			if ( bullet.finishFlyTime < time )
 			{
 				removedBulletsIDs.push_back(bullet.id);
-				it = _flyingBullets.erase( it );
+				it->remove = true;
 			}
 			else if ( bullet.timeForPos < time )
 			{
 				bullet.pos += (time - bullet.timeForPos)*bullet.speed*bullet.dir;
 				bullet.timeForPos = time;
-				it++;
-			}
-			else
-			{
-				it++;
 			}
 		}
+
+		std::remove_if( _flyingBullets.begin(), _flyingBullets.end(), [](Bullet& bullet) {
+			return bullet.remove;
+		});
+
+		if ( !removedBulletsIDs.empty() )
+			_flyingBullets.resize( _flyingBullets.size() - removedBulletsIDs.size() );
+
 
 		for( auto listener : _listeners )
 		{

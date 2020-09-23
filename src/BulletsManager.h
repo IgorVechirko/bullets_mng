@@ -74,13 +74,16 @@ namespace BulletsMng
 
 			float speed;
 			float timeForPos;
-			float finishFlyTime;//44
+			float finishFlyTime;
+
+			bool remove;//48
 
 			Bullet()
 				: speed( 0.0f )
 				, timeForPos( 0.0f )
 				, finishFlyTime( 0.0f )
 				, id( -1 )
+				, remove( false )
 			{
 			}
 
