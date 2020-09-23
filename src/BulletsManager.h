@@ -105,6 +105,9 @@ namespace BulletsMng
 
 		Collision _earliestCollision;
 
+		std::chrono::steady_clock::duration _avarageUpdateTime;
+
+
 
 
 		bool isPointInSegment( const glm::vec2& s1, const glm::vec2& s2, const glm::vec2& point ) const;

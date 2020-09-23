@@ -30,6 +30,7 @@ set( Point ${BULLETS_MNG_SRC_DIR}/Point.h ${BULLETS_MNG_SRC_DIR}/Point.cpp )
 set( BulletsManager ${BULLETS_MNG_SRC_DIR}/BulletsManager.h ${BULLETS_MNG_SRC_DIR}/BulletsManager.cpp )
 set( BulletsManagerListener ${BULLETS_MNG_SRC_DIR}/BulletsManagerListener.h )
 set( LinearFunction ${BULLETS_MNG_SRC_DIR}/LinearFunction.h ${BULLETS_MNG_SRC_DIR}/LinearFunction.cpp )
+set( Timer ${BULLETS_MNG_SRC_DIR}/Timer.h ${BULLETS_MNG_SRC_DIR}/Timer.cpp )
 
 source_group( main FILES 
                         ${entry_point} 
@@ -62,6 +63,10 @@ source_group( bullets_mng FILES
 							${LinearFunction}
 )
 
+source_group( time FILES 
+						${Timer}
+)
+
 
 set( BULLETS_MNG_SRC 
                     ${entry_point}
@@ -76,6 +81,7 @@ set( BULLETS_MNG_SRC
 					${BulletsManager}
 					${BulletsManagerListener}
 					${LinearFunction}
+					${Timer}
 )
 
 add_executable( bullets_mng ${BULLETS_MNG_SRC} )
