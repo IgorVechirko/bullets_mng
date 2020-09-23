@@ -20,6 +20,10 @@ namespace BulletsMng
 		std::unique_ptr<sf::RenderWindow> _window;
 
 		std::chrono::time_point<std::chrono::steady_clock> _lasUpdateTime;
+		int _fps;
+		int _lowestFps;
+
+		sf::Text _text;
 
 
 	protected:

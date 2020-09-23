@@ -88,4 +88,9 @@ if ( MSVC )
 
 	target_compile_options( bullets_mng PRIVATE /wd4018)
 
+	set_target_properties(
+		bullets_mng PROPERTIES
+		VS_DEBUGGER_WORKING_DIRECTORY "${BULLETS_MNG_DIR}/resources"
+	)
+
 endif()

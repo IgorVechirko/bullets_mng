@@ -7,6 +7,8 @@
 namespace BulletsMng
 {
 	Application::Application()
+		: _fps( 0 )
+		, _lowestFps( std::numeric_limits<int>::max() )
 	{
 	}
 	Application::~Application()
@@ -25,6 +27,17 @@ namespace BulletsMng
 	}
 	void Application::run()
 	{
+		sf::Font font;
+		if ( font.loadFromFile( "arial.ttf" ) )
+		{
+			_text.setFont( font );
+			_text.setString( "Hello world" );
+		}
+		else
+		{
+			Console::log( "can't load font" );
+		}
+
 		_lasUpdateTime = std::chrono::steady_clock::now();
 
 		_scenesCreateFunc[ "mng_display" ] = [this](){ return new BulletsMngDisplayScene(this); };
@@ -64,6 +77,26 @@ namespace BulletsMng
 			}
 
 			auto nowTimePoint = std::chrono::steady_clock::now();
+
+			auto prevSeconds = std::chrono::duration_cast<std::chrono::seconds>( _lasUpdateTime.time_since_epoch() ).count();
+			auto nowSeconds = std::chrono::duration_cast<std::chrono::seconds>( nowTimePoint.time_since_epoch() ).count();
+
+			if ( nowSeconds > prevSeconds )
+			{
+				//if ( _fps < _lowestFps )
+				{
+					_lowestFps = _fps;
+					_text.setString( std::to_string( _lowestFps) );
+				}
+
+				_fps = 0;
+			}
+			else
+			{
+				_fps++;
+			}
+
+
 			auto deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>( nowTimePoint - _lasUpdateTime );
 			_lasUpdateTime = nowTimePoint;
 
@@ -74,6 +107,9 @@ namespace BulletsMng
 
 			if ( _currentScene )
 				_currentScene->render( _window.get() );
+
+			
+			_window->draw( _text );
 
 			_window->display();
 		}
