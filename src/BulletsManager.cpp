@@ -57,9 +57,9 @@ namespace BulletsMng
 
 			if ( !bullet.sortedFutureCollisions.empty() )
 			{
-				if ( !_earliestCollision.exist() || ( _earliestCollision.time >= bullet.sortedFutureCollisions.begin()->time  ) )
+				if ( !_earliestCollision.exist() || ( _earliestCollision.time >= bullet.sortedFutureCollisions.front().time  ) )
 				{
-					_earliestCollision = *bullet.sortedFutureCollisions.begin();
+					_earliestCollision = bullet.sortedFutureCollisions.front();// copy data
 				}
 			}
 		}
@@ -72,7 +72,7 @@ namespace BulletsMng
 			}
 		}
 
-#ifdef _DEBUG
+
 		if ( _earliestCollision.exist() )
 		{
 			for( auto listener : _listeners )
@@ -83,12 +83,12 @@ namespace BulletsMng
 			for( auto listener : _listeners )
 				listener->noEarliestCollision();
 		}
-#endif
+
 
 		auto neededSize = _flyingBullets.size() + shotedBullets.size();
 		if( _flyingBullets.capacity() < neededSize )
 		{
-			_flyingBullets.reserve( std::max<size_t>( neededSize, 20 ) );
+			_flyingBullets.reserve( std::max<size_t>( neededSize, 50 ) );
 		}
 
 		std::move( shotedBullets.begin(), shotedBullets.end(), std::inserter( _flyingBullets,_flyingBullets.end() ) );
@@ -99,14 +99,14 @@ namespace BulletsMng
 
 		while( !bullet.sortedFutureCollisions.empty() )
 		{
-			if ( isWallExist( bullet.sortedFutureCollisions.begin()->wallID ) )
+			if ( isWallExist( bullet.sortedFutureCollisions.front().wallID ) )
 			{
-				result = *bullet.sortedFutureCollisions.begin();
+				result = bullet.sortedFutureCollisions.front();
 				break;
 			}
 			else
 			{
-				bullet.sortedFutureCollisions.erase( bullet.sortedFutureCollisions.begin() );
+				bullet.sortedFutureCollisions.pop_front();
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace BulletsMng
 	void BulletsManager::calculateBulletFutureCollisions( Bullet& bullet )
 	{
 		auto moveDist = ( bullet.finishFlyTime - bullet.timeForPos ) * bullet.speed;
-		auto bulletFinishPos = bullet.pos + bullet.dir * moveDist;
+		const auto& bulletFinishPos = bullet.pos + bullet.dir * moveDist;
 
 		LinearFunction bulletPathLinearFunc( bullet.pos, bulletFinishPos );
 
@@ -304,7 +304,7 @@ namespace BulletsMng
 
 			for( auto& bullet : _flyingBullets )
 			{
-				const auto& earliestCollistionForBullet = getBulletEarliestCollision( bullet );
+				const auto& earliestCollistionForBullet = getBulletEarliestCollision( bullet );//copy data;
 					
 				if ( earliestCollistionForBullet.exist() )
 				{
@@ -326,7 +326,6 @@ namespace BulletsMng
 			}
 		}
 
-#ifdef _DEBUG
 		if ( _earliestCollision.exist() )
 		{
 			for( auto listener : _listeners )
@@ -337,7 +336,6 @@ namespace BulletsMng
 			for( auto listener : _listeners )
 				listener->noEarliestCollision();
 		}
-#endif
 
 	}
 }

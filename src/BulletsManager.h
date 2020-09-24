@@ -38,9 +38,9 @@ namespace BulletsMng
 			int bulletID;
 			int wallID;
 
-//#ifdef _DEBUG
+
 			glm::vec2 collisionPoint;
-//#endif
+
 			float time;
 
 			Collision()
@@ -76,7 +76,7 @@ namespace BulletsMng
 			float timeForPos;
 			float finishFlyTime;
 
-			bool remove;//48
+			bool remove;
 
 			Bullet()
 				: speed( 0.0f )
