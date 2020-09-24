@@ -2,6 +2,7 @@
 
 #include "SceneBase.h"
 #include "BulletsMngDisplayScene.h"
+#include "TestScene.h"
 
 
 namespace BulletsMng
@@ -27,22 +28,12 @@ namespace BulletsMng
 	}
 	void Application::run()
 	{
-		sf::Font font;
-		if ( font.loadFromFile( "arial.ttf" ) )
-		{
-			_text.setFont( font );
-			_text.setString( "0" );
-		}
-		else
-		{
-			Console::log( "can't load font" );
-		}
-
 		_lasUpdateTime = std::chrono::steady_clock::now();
 
 		_scenesCreateFunc[ "mng_display" ] = [this](){ return new BulletsMngDisplayScene(this); };
+		_scenesCreateFunc[ "test" ] = [this](){ return new TestScene(this); };
 
-		switchToScene( "mng_display" );
+		switchToScene( "test" );
 
 		sf::ContextSettings _settings;
 		_settings.antialiasingLevel = 8;
@@ -51,13 +42,14 @@ namespace BulletsMng
 
 		while( _window->isOpen() )
 		{
-
 			sf::Event handleEvent;
 
 			while( _window->pollEvent(handleEvent) )
 			{
 				if ( handleEvent.type == sf::Event::Closed )
 					_window->close();
+				else if ( _currentScene )
+					_currentScene->handleEvent( handleEvent );
 			}
 
 			if ( !_newSceneName.empty() )
@@ -109,7 +101,7 @@ namespace BulletsMng
 				_currentScene->render( _window.get() );
 
 			
-			_window->draw( _text );
+			//_window->draw( _text );
 
 			_window->display();
 		}

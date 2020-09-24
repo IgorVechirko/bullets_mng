@@ -32,6 +32,9 @@ namespace BulletsMng
 			renderedUnit->draw( window );
 
 	}
+	void SceneBase::handleEvent( const sf::Event& handleEvent )
+	{
+	}
 	IApplication* SceneBase::getApplication()
 	{
 		assert( _application );

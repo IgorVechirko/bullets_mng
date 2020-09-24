@@ -36,7 +36,9 @@ namespace BulletsMng
 
 		virtual void update( float deltaTime ){};
 
-		void render( sf::RenderWindow* window );
+		virtual void render( sf::RenderWindow* window );
+
+		virtual void handleEvent( const sf::Event& handleEvent );
 
 		IApplication* getApplication();
 
