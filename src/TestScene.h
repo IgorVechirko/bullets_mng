@@ -14,11 +14,13 @@ namespace BulletsMng
 		sf::Text _text;
 
 
+
+
+		void onButtonReleased();
+
 	protected:
 
 		virtual void onOpened() override;
-
-		virtual void render( sf::RenderWindow* window ) override;
 
 	public:
 

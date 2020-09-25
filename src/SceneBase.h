@@ -7,11 +7,14 @@ namespace BulletsMng
 {
 	class RenderedUnit;
 	class IApplication;
+	class EventsHandler;
 	class SceneBase
 	{
 		IApplication* _application;
 
 		std::vector<std::unique_ptr<RenderedUnit>> _renderedUnits;
+
+		std::vector<EventsHandler*> _eventsHandlers;
 
 
 	public:
@@ -23,7 +26,7 @@ namespace BulletsMng
 		virtual void onOpened() {};
 
 		template<typename T>
-		T* createRunderedUnit()
+		T* createRenderedUnit()
 		{
 			auto result = new T();
 			RenderedUnit* unit = result;
@@ -39,6 +42,10 @@ namespace BulletsMng
 		virtual void render( sf::RenderWindow* window );
 
 		virtual void handleEvent( const sf::Event& handleEvent );
+
+		void addEventsHandler( EventsHandler* handler );
+		void delEventsHandler( EventsHandler* handler );
+
 
 		IApplication* getApplication();
 

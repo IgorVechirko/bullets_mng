@@ -14,6 +14,7 @@ namespace BulletsMng
 		, public EventsHandler
 	{
 
+		sf::Font _font;
 		sf::Text _text;
 
 		buttonPressedCallBack _pressedCallBack;

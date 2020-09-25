@@ -11,8 +11,8 @@ namespace BulletsMng
 
 	public:
 
-		EventsHandler();
-		virtual ~EventsHandler();
+		EventsHandler(){};
+		virtual ~EventsHandler(){};
 
 
 		virtual void handleEvent( const sf::Event& handleEvent ) = 0;

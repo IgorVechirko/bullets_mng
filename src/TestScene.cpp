@@ -1,5 +1,7 @@
 #include "TestScene.h"
 
+#include "Button.h"
+
 
 namespace BulletsMng
 {
@@ -11,6 +13,10 @@ namespace BulletsMng
 	TestScene::~TestScene()
 	{
 	}
+	void TestScene::onButtonReleased()
+	{
+		Console::log( "Button released" );
+	}
 	void TestScene::onOpened()
 	{
 
@@ -21,12 +27,13 @@ namespace BulletsMng
 			_text.setColor( sf::Color::Red );
 		}
 
-	}
-	void TestScene::render( sf::RenderWindow* window )
-	{
-		SceneBase::render( window );
-
-		window->draw( _text );
+		auto button = createRenderedUnit<Button>();
+		if ( button )
+		{
+			addEventsHandler( button );
+			button->setPressedCallBack( std::bind( &TestScene::onButtonReleased, this ) );
+			button->getText().setString( "BUTTON" );
+		}
 	}
 
 }

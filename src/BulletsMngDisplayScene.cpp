@@ -66,7 +66,7 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::onOpened()
 	{
-		_earliestCollision = createRunderedUnit<Point>();
+		_earliestCollision = createRenderedUnit<Point>();
 		if ( _earliestCollision )
 		{
 			_earliestCollision->getShape().setOrigin( 10, 10 );
@@ -86,7 +86,7 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::onWallAdded( int id, const glm::vec2& p1, const glm::vec2& p2 )
 	{
-		auto line = createRunderedUnit<Line>();
+		auto line = createRenderedUnit<Line>();
 		if ( line )
 		{
 			line->setStartPoint( sf::Vector2f( p1.x, getApplication()->getWindowSize().y - p1.y ) );
@@ -106,7 +106,7 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::onBulletAdded( int id, const glm::vec2& pos )
 	{
-		auto point = createRunderedUnit<Point>();
+		auto point = createRenderedUnit<Point>();
 		if ( point )
 		{
 			point->getShape().setFillColor( sf::Color::Blue );

@@ -2,6 +2,7 @@
 
 #include "IApplication.h"
 #include "RenderedUnit.h"
+#include "EventsHandler.h"
 
 
 namespace BulletsMng
@@ -34,6 +35,30 @@ namespace BulletsMng
 	}
 	void SceneBase::handleEvent( const sf::Event& handleEvent )
 	{
+		for( auto handler : _eventsHandlers )
+			handler->handleEvent( handleEvent );
+	}
+	void SceneBase::addEventsHandler( EventsHandler* handler )
+	{
+		if ( handler )
+		{
+			auto findIt = std::find( _eventsHandlers.begin(), _eventsHandlers.end(), handler );
+			if ( findIt == _eventsHandlers.end() )
+			{
+				_eventsHandlers.push_back( handler );
+			}
+		}
+	}
+	void SceneBase::delEventsHandler( EventsHandler* handler )
+	{
+		if ( handler )
+		{
+			auto findIt = std::find( _eventsHandlers.begin(), _eventsHandlers.end(), handler );
+			if ( findIt != _eventsHandlers.end() )
+			{
+				_eventsHandlers.erase( findIt );
+			}
+		}
 	}
 	IApplication* SceneBase::getApplication()
 	{
