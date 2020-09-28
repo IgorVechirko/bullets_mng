@@ -3,6 +3,7 @@
 #include "Line.h"
 #include "Point.h"
 #include "IApplication.h"
+#include "Button.h"
 
 namespace BulletsMng
 {
@@ -11,12 +12,15 @@ namespace BulletsMng
 		: SceneBase( application )
 		, _wallsAmount( 10 )
 		, _bulletsAmount( 10 )
-		, _startBtn( nullptr )
-		, _restartBtn( nullptr )
+		, _timeMultiplier( 10 )
 	{
 	}
 	BulletsMngDisplayScene::~BulletsMngDisplayScene()
 	{
+	}
+	void BulletsMngDisplayScene::returnToSetupScene()
+	{
+		getApplication()->switchToScene( "setup" );
 	}
 	void BulletsMngDisplayScene::generateWalls()
 	{
@@ -65,8 +69,78 @@ namespace BulletsMng
 			//_shotedThreads.push_back( std::unique_ptr<std::thread>(thread) );
 		}
 	}
+	void BulletsMngDisplayScene::initUI()
+	{
+		float buttonHeight = 50.0f;
+
+		auto openSetupSceneBtn = createRenderedUnit<Button>();
+		if ( openSetupSceneBtn )
+		{
+			openSetupSceneBtn->getText().setCharacterSize( 15 );
+			openSetupSceneBtn->setPressedCallBack( std::bind( &BulletsMngDisplayScene::returnToSetupScene, this ) );
+			openSetupSceneBtn->getText().setString( "RETURN TO SETUP" );
+			addEventsHandler( openSetupSceneBtn );
+
+			buttonHeight = openSetupSceneBtn->getText().getCharacterSize();
+		}
+
+		addEventsHandler( this );
+
+		if ( _font.loadFromFile( "arial.ttf" ) )
+		{
+			_multiplierInfoLabel.setFont( _font );
+			_multiplierInfoLabel.setString( "hello word" );
+			_multiplierInfoLabel.setColor( sf::Color::Blue );
+			_multiplierInfoLabel.setCharacterSize( 15 );
+
+			_multiplierInfoLabel.setPosition( 0.0f, buttonHeight );
+		}
+
+		updateTimeMultiplierLabel();
+	}
+	void BulletsMngDisplayScene::increaseTimeMultiplier()
+	{
+		int maxMultiplier = 200;
+
+		if ( _timeMultiplier >= 10 )
+		{
+			if ( _timeMultiplier < maxMultiplier );
+			_timeMultiplier += 10;
+		}
+		else
+		{
+			_timeMultiplier += 1;
+		}
+
+		updateTimeMultiplierLabel();
+	}
+	void BulletsMngDisplayScene::decreaseTimeMultiplier()
+	{
+		int minMultiplier = 1;
+
+		if ( _timeMultiplier <= 10 )
+		{
+			if ( _timeMultiplier > minMultiplier )
+				_timeMultiplier -= 1;
+		}
+		else
+		{
+			_timeMultiplier -= 10;
+		}
+
+		updateTimeMultiplierLabel();
+	}
+	void BulletsMngDisplayScene::updateTimeMultiplierLabel()
+	{
+		int wholePart = static_cast<int>( _timeMultiplier / 10.0f );
+		int decPart = static_cast<int>( _timeMultiplier - (wholePart*10.0f) );
+
+		_multiplierInfoLabel.setString( std::to_string(wholePart) + "." + std::to_string(decPart) + " " + "scroll mouse wheel to change time multiplier" );
+	}
 	void BulletsMngDisplayScene::onOpened( const std::map<std::string,std::string>& sceneParams )
 	{
+		initUI();
+
 		auto findParamIt = sceneParams.find( "walls_amount" );
 		if ( findParamIt != sceneParams.end() )
 		{
@@ -78,7 +152,6 @@ namespace BulletsMng
 		{
 			_bulletsAmount = std::atoi( findParamIt->second.c_str() );
 		}
-
 
 		_earliestCollision = createRenderedUnit<Point>();
 		if ( _earliestCollision )
@@ -92,11 +165,33 @@ namespace BulletsMng
 
 		generateWalls();
 		generateBullets();
-
 	}
 	void BulletsMngDisplayScene::update( float deltaTime )
 	{
-		_bulletsMng.update( deltaTime * 1.0f );
+		_bulletsMng.update( deltaTime * ( _timeMultiplier * 0.1f ) );
+	}
+	void BulletsMngDisplayScene::render( sf::RenderWindow* window )
+	{
+		SceneBase::render( window );
+
+		window->draw( _multiplierInfoLabel );
+	}
+	void BulletsMngDisplayScene::onEventHandled( const sf::Event& handledEvent )
+	{
+		switch (handledEvent.type)
+		{
+			case sf::Event::MouseWheelScrolled:
+			{
+				if ( handledEvent.mouseWheelScroll.delta > 0.0f )
+					increaseTimeMultiplier();
+				else
+					decreaseTimeMultiplier();
+
+				break;
+			}
+			default:
+				break;
+		}
 	}
 	void BulletsMngDisplayScene::onWallAdded( int id, const glm::vec2& p1, const glm::vec2& p2 )
 	{

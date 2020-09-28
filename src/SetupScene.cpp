@@ -16,8 +16,8 @@ namespace BulletsMng
 	void SetupScene::runBulletsMngScene()
 	{
 		std::map<std::string,std::string> newSceneParams;
-		newSceneParams[ "bullets_amount" ] = "10";
-		newSceneParams[ "walls_amount" ] = "10";
+		newSceneParams[ "bullets_amount" ] = "100";
+		newSceneParams[ "walls_amount" ] = "100";
 
 		getApplication()->switchToScene( "mng_display", newSceneParams );
 	}

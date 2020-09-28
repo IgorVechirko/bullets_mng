@@ -26,7 +26,9 @@ namespace BulletsMng
 		{
 			case sf::Event::MouseButtonPressed:
 			{
-				if ( _pressedCallBack && handleEvent.mouseButton.button == sf::Mouse::Button::Left )
+				if ( _pressedCallBack 
+					&& handleEvent.mouseButton.button == sf::Mouse::Button::Left
+					&& _text.getGlobalBounds().contains( handleEvent.mouseButton.x, handleEvent.mouseButton.y ) )
 				{
 					_pressedCallBack();
 				}

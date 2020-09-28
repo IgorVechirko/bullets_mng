@@ -4,6 +4,7 @@
 #include "SceneBase.h"
 #include "BulletsManager.h"
 #include "BulletsManagerListener.h"
+#include "EventsHandler.h"
 
 namespace BulletsMng
 {
@@ -13,12 +14,14 @@ namespace BulletsMng
 	class BulletsMngDisplayScene
 		: public SceneBase
 		, public BulletsManagerListener
+		, public EventsHandler
 	{
 
 		BulletsManager _bulletsMng;
 
 		int _wallsAmount;
 		int _bulletsAmount;
+		int _timeMultiplier;
 
 
 		std::map<int,Line*> _wallsVisual;
@@ -28,20 +31,30 @@ namespace BulletsMng
 
 		std::vector<std::unique_ptr<std::thread>> _shotedThreads;
 
-		Button* _startBtn;
-		Button* _restartBtn;
+		sf::Text _multiplierInfoLabel;
+		sf::Font _font;
 
 
+		void returnToSetupScene();
 
 		void generateWalls();
 		void generateBullets();
 
+		void initUI();
+
+		void increaseTimeMultiplier();
+		void decreaseTimeMultiplier();
+		void updateTimeMultiplierLabel();
 
 	protected:
 
 		virtual void onOpened( const std::map<std::string,std::string>& sceneParams ) override;
 
 		virtual void update( float deltaTime ) override;
+
+		virtual void render( sf::RenderWindow* window ) override;
+
+		virtual void onEventHandled( const sf::Event& handledEvent ) override;
 
 		//BulletsManagerListener
 		virtual void onWallAdded( int id, const glm::vec2& p1, const glm::vec2& p2 );
