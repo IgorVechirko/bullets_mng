@@ -1,7 +1,7 @@
 #include "TestScene.h"
 
 #include "Button.h"
-#include "NumberField.h"
+#include "Label.h"
 
 
 namespace BulletsMng
@@ -36,10 +36,10 @@ namespace BulletsMng
 			button->getText().setString( "BUTTON" );
 		}*/
 
-		auto field = createRenderedUnit<NumberField>();
+		auto field = createRenderedUnit<Label>();
 		if ( field )
 		{
-			addEventsHandler( field );
+			field->getText().setString( "Hello" );
 		}
 	}
 
