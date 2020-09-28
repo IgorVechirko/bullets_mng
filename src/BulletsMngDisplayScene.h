@@ -54,7 +54,7 @@ namespace BulletsMng
 
 	public:
 
-		BulletsMngDisplayScene( IApplication* switcher );
+		BulletsMngDisplayScene( IApplication* application );
 		virtual ~BulletsMngDisplayScene();
 		MAKE_UNCOPYABLE( BulletsMngDisplayScene );
 

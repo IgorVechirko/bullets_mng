@@ -9,15 +9,23 @@ namespace BulletsMng
 	class EventsHandler
 	{
 
+
+		bool _handledEnable;
+
+	protected:
+
+		virtual void onEventHandled( const sf::Event& handledEvent ) = 0;
+
+
 	public:
 
-		EventsHandler(){};
-		virtual ~EventsHandler(){};
+		EventsHandler();
+		virtual ~EventsHandler();
 
+		void handleEvent( const sf::Event& handleEvent );
 
-		virtual void handleEvent( const sf::Event& handleEvent ) = 0;
-
-
+		bool isHandleEnable();
+		void setHandleEnable( bool isEnable );
 
 	};
 

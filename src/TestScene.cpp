@@ -6,8 +6,8 @@
 namespace BulletsMng
 {
 
-	TestScene::TestScene( IApplication* switcher )
-		: SceneBase( switcher )
+	TestScene::TestScene( IApplication* application )
+		: SceneBase( application )
 	{
 	}
 	TestScene::~TestScene()

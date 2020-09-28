@@ -24,7 +24,7 @@ namespace BulletsMng
 
 		virtual void draw( sf::RenderWindow* window ) override;
 
-		virtual void handleEvent( const sf::Event& handleEvent ) override;
+		virtual void onEventHandled( const sf::Event& handleEvent ) override;
 
 
 	public:

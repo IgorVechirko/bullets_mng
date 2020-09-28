@@ -7,8 +7,8 @@
 namespace BulletsMng
 {
 
-	BulletsMngDisplayScene::BulletsMngDisplayScene( IApplication* switcher )
-		: SceneBase( switcher )
+	BulletsMngDisplayScene::BulletsMngDisplayScene( IApplication* application )
+		: SceneBase( application )
 		, _wallsAmount( 10 )
 		, _bulletsAmount( 10 )
 		, _startBtn( nullptr )

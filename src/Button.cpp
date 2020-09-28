@@ -20,7 +20,7 @@ namespace BulletsMng
 	{
 		window->draw(_text);
 	}
-	void Button::handleEvent( const sf::Event& handleEvent )
+	void Button::onEventHandled( const sf::Event& handleEvent )
 	{
 		switch ( handleEvent.type )
 		{

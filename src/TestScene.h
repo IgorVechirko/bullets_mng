@@ -24,7 +24,7 @@ namespace BulletsMng
 
 	public:
 
-		TestScene( IApplication* switcher);
+		TestScene( IApplication* application);
 		virtual ~TestScene();
 
 

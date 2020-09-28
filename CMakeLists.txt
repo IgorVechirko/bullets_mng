@@ -32,8 +32,9 @@ set( BulletsManagerListener ${BULLETS_MNG_SRC_DIR}/BulletsManagerListener.h )
 set( LinearFunction ${BULLETS_MNG_SRC_DIR}/LinearFunction.h ${BULLETS_MNG_SRC_DIR}/LinearFunction.cpp )
 set( Timer ${BULLETS_MNG_SRC_DIR}/Timer.h ${BULLETS_MNG_SRC_DIR}/Timer.cpp )
 set( TestScene ${BULLETS_MNG_SRC_DIR}/TestScene.h ${BULLETS_MNG_SRC_DIR}/TestScene.cpp )
-set( EventsHandle ${BULLETS_MNG_SRC_DIR}/EventsHandler.h )
+set( EventsHandle ${BULLETS_MNG_SRC_DIR}/EventsHandler.h ${BULLETS_MNG_SRC_DIR}/EventsHandler.cpp )
 set( Button ${BULLETS_MNG_SRC_DIR}/Button.h ${BULLETS_MNG_SRC_DIR}/Button.cpp )
+set( SetupScene ${BULLETS_MNG_SRC_DIR}/SetupScene.h ${BULLETS_MNG_SRC_DIR}/SetupScene.cpp )
 
 source_group( main FILES 
                         ${entry_point} 
@@ -51,6 +52,7 @@ source_group( scene\\base FILES
 source_group( scene FILES
 						${BulletsMngDisplayScene}
 						${TestScene}
+						${SetupScene}
 )
 
 source_group( rendered_units\\base FILES
@@ -91,6 +93,7 @@ set( BULLETS_MNG_SRC
 					${TestScene}
 					${EventsHandle}
 					${Button}
+					${SetupScene}
 )
 
 add_executable( bullets_mng ${BULLETS_MNG_SRC} )
