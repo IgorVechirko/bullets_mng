@@ -104,8 +104,8 @@ namespace BulletsMng
 
 		if ( _timeMultiplier >= 10 )
 		{
-			if ( _timeMultiplier < maxMultiplier );
-			_timeMultiplier += 10;
+			if ( _timeMultiplier < maxMultiplier )
+				_timeMultiplier += 10;
 		}
 		else
 		{

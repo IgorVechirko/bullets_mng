@@ -6,9 +6,12 @@
 
 namespace BulletsMng
 {
-
+	class NumberField;
 	class SetupScene : public SceneBase
 	{
+
+		NumberField* _wallsNumField;
+		NumberField* _bulletsNumField;
 
 		
 

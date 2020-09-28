@@ -38,9 +38,7 @@ namespace BulletsMng
 
 		auto field = createRenderedUnit<Label>();
 		if ( field )
-		{
 			field->getText().setString( "Hello" );
-		}
 	}
 
 }

@@ -46,6 +46,8 @@ namespace BulletsMng
 
 		int getNumber();
 
+		sf::Text& getText();
+
 	};
 
 

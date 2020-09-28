@@ -36,7 +36,7 @@ namespace BulletsMng
 		_scenesCreateFunc[ "test" ] = [this]() -> SceneBase* { return new TestScene(this); };
 		_scenesCreateFunc[ "setup" ] = [this]() -> SceneBase* { return new SetupScene(this); };
 
-		switchToScene( "test" );
+		switchToScene( "setup" );
 
 		sf::ContextSettings _settings;
 		_settings.antialiasingLevel = 8;

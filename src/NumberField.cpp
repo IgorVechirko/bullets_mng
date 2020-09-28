@@ -120,4 +120,8 @@ namespace BulletsMng
 	{
 		return std::atoi( _enteredString.c_str() );
 	}
+	sf::Text& NumberField::getText()
+	{
+		return _text;
+	}
 }
