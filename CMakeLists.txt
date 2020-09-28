@@ -35,6 +35,7 @@ set( TestScene ${BULLETS_MNG_SRC_DIR}/TestScene.h ${BULLETS_MNG_SRC_DIR}/TestSce
 set( EventsHandle ${BULLETS_MNG_SRC_DIR}/EventsHandler.h ${BULLETS_MNG_SRC_DIR}/EventsHandler.cpp )
 set( Button ${BULLETS_MNG_SRC_DIR}/Button.h ${BULLETS_MNG_SRC_DIR}/Button.cpp )
 set( SetupScene ${BULLETS_MNG_SRC_DIR}/SetupScene.h ${BULLETS_MNG_SRC_DIR}/SetupScene.cpp )
+set( NumberField ${BULLETS_MNG_SRC_DIR}/NumberField.h ${BULLETS_MNG_SRC_DIR}/NumberField.cpp )
 
 source_group( main FILES 
                         ${entry_point} 
@@ -63,6 +64,7 @@ source_group( rendered_units FILES
 								${Line}
 								${Point}
 								${Button}
+								${NumberField}
 )
 
 source_group( bullets_mng FILES 
@@ -94,6 +96,7 @@ set( BULLETS_MNG_SRC
 					${EventsHandle}
 					${Button}
 					${SetupScene}
+					${NumberField}
 )
 
 add_executable( bullets_mng ${BULLETS_MNG_SRC} )
