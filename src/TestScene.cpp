@@ -17,7 +17,7 @@ namespace BulletsMng
 	{
 		Console::log( "Button released" );
 	}
-	void TestScene::onOpened()
+	void TestScene::onOpened( const std::map<std::string,std::string>& sceneParams )
 	{
 
 		if ( _font.loadFromFile( "arial.ttf" ) )

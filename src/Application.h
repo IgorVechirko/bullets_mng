@@ -15,6 +15,8 @@ namespace BulletsMng
 
 		std::map<std::string, createSceneFunc > _scenesCreateFunc;
 		std::unique_ptr<SceneBase> _currentScene;
+
+		std::map<std::string,std::string> _newSceneParams;
 		std::string _newSceneName;
 
 		std::unique_ptr<sf::RenderWindow> _window;
@@ -36,7 +38,7 @@ namespace BulletsMng
 		}
 
 
-		virtual void switchToScene( const std::string& newSceneID ) override;
+		virtual void switchToScene( const std::string& newSceneID, const std::map<std::string,std::string>& newSceneParams = std::map<std::string,std::string>() ) override;
 		virtual sf::Vector2u getWindowSize() const override;
 
 	public:

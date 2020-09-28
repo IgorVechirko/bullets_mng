@@ -7,6 +7,7 @@
 
 namespace BulletsMng
 {
+	class Button;
 	class Line;
 	class Point;
 	class BulletsMngDisplayScene
@@ -16,12 +17,20 @@ namespace BulletsMng
 
 		BulletsManager _bulletsMng;
 
+		int _wallsAmount;
+		int _bulletsAmount;
+
+
 		std::map<int,Line*> _wallsVisual;
 		std::map<int,Point*> _bulletsVisual;
 
 		Point* _earliestCollision;
 
 		std::vector<std::unique_ptr<std::thread>> _shotedThreads;
+
+		Button* _startBtn;
+		Button* _restartBtn;
+
 
 
 		void generateWalls();
@@ -30,7 +39,7 @@ namespace BulletsMng
 
 	protected:
 
-		virtual void onOpened() override;
+		virtual void onOpened( const std::map<std::string,std::string>& sceneParams ) override;
 
 		virtual void update( float deltaTime ) override;
 

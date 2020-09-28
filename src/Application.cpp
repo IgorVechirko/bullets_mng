@@ -15,11 +15,12 @@ namespace BulletsMng
 	Application::~Application()
 	{
 	}
-	void Application::switchToScene( const std::string& newSceneID )
+	void Application::switchToScene( const std::string& newSceneID, const std::map<std::string,std::string>& newSceneParams )
 	{
 		if ( !newSceneID.empty() )
 		{
 			_newSceneName = newSceneID;
+			_newSceneParams = newSceneParams;
 		}
 	}
 	sf::Vector2u Application::getWindowSize() const
@@ -61,10 +62,11 @@ namespace BulletsMng
 					if ( newScene )
 					{
 						_currentScene.reset( newScene );
-						_currentScene->onOpened();
+						_currentScene->onOpened(_newSceneParams);
 					}
 				}
 
+				_newSceneParams.clear();
 				_newSceneName.clear();
 			}
 

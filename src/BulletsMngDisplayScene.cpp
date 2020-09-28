@@ -9,6 +9,10 @@ namespace BulletsMng
 
 	BulletsMngDisplayScene::BulletsMngDisplayScene( IApplication* switcher )
 		: SceneBase( switcher )
+		, _wallsAmount( 10 )
+		, _bulletsAmount( 10 )
+		, _startBtn( nullptr )
+		, _restartBtn( nullptr )
 	{
 	}
 	BulletsMngDisplayScene::~BulletsMngDisplayScene()
@@ -23,8 +27,7 @@ namespace BulletsMng
 		std::uniform_real_distribution<float> xGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().x) );
 		std::uniform_real_distribution<float> yGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().y) );
 
-		int wallsAmount = 50;
-		for( int wallNum = 0; wallNum < wallsAmount; wallNum++ )
+		for( int wallNum = 0; wallNum < _wallsAmount; wallNum++ )
 			_bulletsMng.addWall( glm::vec2( xGen(dre), yGen(dre) ), glm::vec2( xGen(dre), yGen(dre) ) );
 	}
 	void BulletsMngDisplayScene::generateBullets()
@@ -41,15 +44,13 @@ namespace BulletsMng
 		std::uniform_real_distribution<float> lifeTimeGen( 5.0f, 5.0f );
 
 		std::uniform_real_distribution<float> fireTimeGen( 2.0f, 15.0f );
-			
-		int bulletsAmount = 100;
 
 		auto threadFunc = []( BulletsManager& mng, glm::vec2 pos, glm::vec2 dir, float speed, float fireTime, float lifeTime ) {
 			std::this_thread::sleep_for( std::chrono::duration<float,std::ratio<1,1>>(fireTime) );
 			mng.fire( pos, dir, speed, fireTime, lifeTime );
 		};
 
-		for( int i = 0; i < bulletsAmount; i++ )
+		for( int i = 0; i < _bulletsAmount; i++ )
 		{
 			auto dir = glm::normalize( glm::vec2( dirGen(dre), dirGen(dre) ) );
 			glm::vec2 pos( xGen(dre), yGen(dre) );
@@ -64,8 +65,21 @@ namespace BulletsMng
 			//_shotedThreads.push_back( std::unique_ptr<std::thread>(thread) );
 		}
 	}
-	void BulletsMngDisplayScene::onOpened()
+	void BulletsMngDisplayScene::onOpened( const std::map<std::string,std::string>& sceneParams )
 	{
+		auto findParamIt = sceneParams.find( "walls_amount" );
+		if ( findParamIt != sceneParams.end() )
+		{
+			_wallsAmount = std::atoi( findParamIt->second.c_str() );
+		}
+
+		findParamIt = sceneParams.find( "bullets_amount" );
+		if ( findParamIt != sceneParams.end() )
+		{
+			_bulletsAmount = std::atoi( findParamIt->second.c_str() );
+		}
+
+
 		_earliestCollision = createRenderedUnit<Point>();
 		if ( _earliestCollision )
 		{

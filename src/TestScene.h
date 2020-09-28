@@ -20,7 +20,7 @@ namespace BulletsMng
 
 	protected:
 
-		virtual void onOpened() override;
+		virtual void onOpened( const std::map<std::string,std::string>& sceneParams ) override;
 
 	public:
 

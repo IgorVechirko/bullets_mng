@@ -23,7 +23,7 @@ namespace BulletsMng
 		virtual ~SceneBase();
 		MAKE_UNCOPYABLE( SceneBase );
 
-		virtual void onOpened() {};
+		virtual void onOpened( const std::map<std::string,std::string>& sceneParams ) {};
 
 		template<typename T>
 		T* createRenderedUnit()
