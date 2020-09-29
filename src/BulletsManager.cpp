@@ -148,7 +148,7 @@ namespace BulletsMng
 		}
 
 	}
-	bool BulletsManager::isWallExist( int wallID )
+	bool BulletsManager::isWallExist( int wallID ) const
 	{
 		return _existingWallsIDs.find( wallID ) != _existingWallsIDs.end();
 	}
@@ -252,7 +252,7 @@ namespace BulletsMng
 	{
 		if ( _walls.capacity() == _walls.size() )
 		{
-			_walls.reserve( _walls.size() + 10 );
+			_walls.reserve( _walls.size() + 50 );
 		}
 
 		_walls.resize( _walls.size() + 1 );

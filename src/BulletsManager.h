@@ -120,7 +120,7 @@ namespace BulletsMng
 		Collision getBulletEarliestCollision( Bullet& bullet );
 		void calculateBulletFutureCollisions( Bullet& bullet );
 
-		bool isWallExist( int wallID );
+		bool isWallExist( int wallID ) const;
 
 		void moveBulletsLinearTillTime( float time );
 
