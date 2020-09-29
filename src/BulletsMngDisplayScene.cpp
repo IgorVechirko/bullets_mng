@@ -51,7 +51,7 @@ namespace BulletsMng
 
 			std::uniform_real_distribution<float> fireTimeGen( 2.0f, 15.0f );
 
-			std::uniform_int_distribution threadSleepTimeGen( 10, 50 );
+			std::uniform_int_distribution threadSleepTimeGen( 10, 20 );
 
 			for( int i = 0; i < bulletsAmount; i++ )
 			{
@@ -68,20 +68,11 @@ namespace BulletsMng
 		};
 
 		glm::vec2 winSize( getApplication()->getWindowSize().x, getApplication()->getWindowSize().y );
+		
+		auto thread = new std::thread( threadFunc, _bulletsAmount, std::ref(_bulletsMng), winSize );
+		thread->detach();
 
-		int threadsAmount = 10;
-		for( int theadIndx = 0; theadIndx < threadsAmount; theadIndx++  )
-		{
-			int bulletsForThread = _bulletsAmount/threadsAmount;
-
-			if ( theadIndx == threadsAmount-1 )
-				bulletsForThread += _bulletsAmount%threadsAmount;
-
-			auto thread = new std::thread( threadFunc, bulletsForThread, std::ref(_bulletsMng), winSize );
-			thread->detach();
-
-			_shotedThreads.push_back( std::unique_ptr<std::thread>(thread) );
-		}
+		_bulletsGenThread = std::unique_ptr<std::thread>(thread);
 	}
 	void BulletsMngDisplayScene::initUI()
 	{

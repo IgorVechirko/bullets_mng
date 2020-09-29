@@ -32,7 +32,7 @@ namespace BulletsMng
 		sf::Text _multiplierInfoLabel;
 		sf::Font _font;
 
-		std::vector<std::unique_ptr<std::thread>> _shotedThreads;
+		std::unique_ptr<std::thread> _bulletsGenThread;
 
 
 		void returnToSetupScene();
