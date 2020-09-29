@@ -44,10 +44,11 @@ namespace BulletsMng
 
 		if ( !shotedBullets.empty() )
 		{
-			std::remove_if( _waitStartFlyBullets.begin(), _waitStartFlyBullets.end(), [](const Bullet& bullet) -> bool {
+			auto pastEndIt = std::remove_if( _waitStartFlyBullets.begin(), _waitStartFlyBullets.end(), [](const Bullet& bullet) -> bool {
 				return bullet.remove;		
 			} );
-			_waitStartFlyBullets.resize( _waitStartFlyBullets.size() - shotedBullets.size() );
+
+			_waitStartFlyBullets.erase( pastEndIt, _waitStartFlyBullets.end() );
 		}
 		lock.unlock();
 
@@ -162,12 +163,10 @@ namespace BulletsMng
 			}
 		}
 
-		std::remove_if( _flyingBullets.begin(), _flyingBullets.end(), [](Bullet& bullet) {
+		auto pastEndIt = std::remove_if( _flyingBullets.begin(), _flyingBullets.end(), [](const Bullet& bullet) -> bool {
 			return bullet.remove;
 		});
-
-		if ( !removedBulletsIDs.empty() )
-			_flyingBullets.resize( _flyingBullets.size() - removedBulletsIDs.size() );
+		_flyingBullets.erase( pastEndIt, _flyingBullets.end() );
 
 
 		for( auto listener : _listeners )

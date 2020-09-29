@@ -10,7 +10,7 @@ namespace BulletsMng
 		{
 			_text.setFont( _font );
 			_text.setString( "hello word" );
-			_text.setColor( sf::Color::Red );
+			_text.setFillColor( sf::Color::Red );
 		}
 	}
 	Button::~Button()
@@ -28,7 +28,7 @@ namespace BulletsMng
 			{
 				if ( _pressedCallBack 
 					&& handleEvent.mouseButton.button == sf::Mouse::Button::Left
-					&& _text.getGlobalBounds().contains( handleEvent.mouseButton.x, handleEvent.mouseButton.y ) )
+					&& _text.getGlobalBounds().contains( static_cast<float>(handleEvent.mouseButton.x), static_cast<float>(handleEvent.mouseButton.y) ) )
 				{
 					_pressedCallBack();
 				}
@@ -36,7 +36,7 @@ namespace BulletsMng
 			}
 			case sf::Event::MouseMoved:
 			{
-				_text.setColor( _text.getGlobalBounds().contains( handleEvent.mouseMove.x, handleEvent.mouseMove.y ) ? sf::Color::Green : sf::Color::Red );
+				_text.setFillColor( _text.getGlobalBounds().contains( static_cast<float>(handleEvent.mouseMove.x), static_cast<float>(handleEvent.mouseMove.y) ) ? sf::Color::Green : sf::Color::Red );
 				
 				break;
 			}

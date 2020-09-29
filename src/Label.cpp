@@ -9,7 +9,7 @@ namespace BulletsMng
 		{
 			_text.setFont( _font );
 			_text.setString( "" );
-			_text.setColor( sf::Color::Red );
+			_text.setFillColor( sf::Color::Red );
 		}
 	}
 	Label::~Label()

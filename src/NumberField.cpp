@@ -12,7 +12,7 @@ namespace BulletsMng
 		{
 			_text.setFont( _font );
 			_text.setString( _placeholderText );
-			_text.setColor( sf::Color::Red );
+			_text.setFillColor( sf::Color::Red );
 		}
 	}
 	NumberField::~NumberField()
@@ -76,7 +76,7 @@ namespace BulletsMng
 			{
 				if ( handleEvent.mouseButton.button == sf::Mouse::Button::Left )
 				{
-					if ( _text.getGlobalBounds().contains( handleEvent.mouseButton.x, handleEvent.mouseButton.y ) )
+					if ( _text.getGlobalBounds().contains( static_cast<float>(handleEvent.mouseButton.x), static_cast<float>(handleEvent.mouseButton.y) ) )
 						switchToState( FieldState::EDIT );
 					else
 						switchToState( FieldState::VIEW );

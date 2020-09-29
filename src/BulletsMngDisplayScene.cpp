@@ -81,7 +81,7 @@ namespace BulletsMng
 			openSetupSceneBtn->getText().setString( "RETURN TO SETUP" );
 			addEventsHandler( openSetupSceneBtn );
 
-			buttonHeight = openSetupSceneBtn->getText().getCharacterSize();
+			buttonHeight = static_cast<float>(openSetupSceneBtn->getText().getCharacterSize());
 		}
 
 		addEventsHandler( this );
@@ -89,7 +89,7 @@ namespace BulletsMng
 		if ( _font.loadFromFile( "arial.ttf" ) )
 		{
 			_multiplierInfoLabel.setFont( _font );
-			_multiplierInfoLabel.setColor( sf::Color::Blue );
+			_multiplierInfoLabel.setFillColor( sf::Color::Blue );
 			_multiplierInfoLabel.setCharacterSize( 15 );
 
 			_multiplierInfoLabel.setPosition( 0.0f, buttonHeight );
