@@ -108,8 +108,6 @@ namespace BulletsMng
 
 		Collision _earliestCollision;
 
-		std::chrono::steady_clock::duration _avarageUpdateTime;
-
 
 
 
@@ -117,7 +115,6 @@ namespace BulletsMng
 
 		void shootNewBullets();
 
-		Collision getBulletEarliestCollision( Bullet& bullet );
 		void calculateBulletFutureCollisions( Bullet& bullet );
 
 		bool isWallExist( int wallID ) const;
@@ -126,7 +123,7 @@ namespace BulletsMng
 
 		void doCollision( const Collision& collision );
 
-
+		void findEarliestCollision();
 
 	public:
 

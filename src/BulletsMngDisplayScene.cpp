@@ -24,8 +24,8 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::generateWalls()
 	{
-		//_bulletsMng->addWall( glm::vec2( getGLContext()->getWindowSize().y * 1.3f, 0.0f ), glm::vec2( 0.0f, getGLContext()->getWindowSize().y * 1.3f ) );
-		//_bulletsMng->addWall( glm::vec2( 0.0f, 200.0f ), glm::vec2( 1124.0f, 200.0f ) );
+		//_bulletsMng.addWall( glm::vec2( getApplication()->getWindowSize().y * 1.3f, 0.0f ), glm::vec2( 0.0f, getApplication()->getWindowSize().y * 1.3f ) );
+		//_bulletsMng.addWall( glm::vec2( 0.0f, 200.0f ), glm::vec2( 1124.0f, 200.0f ) );
 
 		std::default_random_engine dre;
 		std::uniform_real_distribution<float> xGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().x) );
@@ -36,8 +36,8 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::generateBullets()
 	{
-		//Vec3 startPos( getGLContext()->getWindowSize().x / 2.0f, getGLContext()->getWindowSize().y / 2.0f, 0.0f );
-		//_bulletsMng->fire( startPos, glm::vec2( 1.0f, 0.0f ), 500.0f, 2.0f, 10.0f );
+		//glm::vec2 startPos( getApplication()->getWindowSize().x / 2.0f, getApplication()->getWindowSize().y / 2.0f );
+		//_bulletsMng.fire( startPos, glm::vec2( 1.0f, 0.0f ), 500.0f, 2.0f, 10.0f );
 
 		std::default_random_engine dre;
 		std::uniform_real_distribution<float> dirGen( -1.0f, 1.0f );
@@ -89,7 +89,6 @@ namespace BulletsMng
 		if ( _font.loadFromFile( "arial.ttf" ) )
 		{
 			_multiplierInfoLabel.setFont( _font );
-			_multiplierInfoLabel.setString( "hello word" );
 			_multiplierInfoLabel.setColor( sf::Color::Blue );
 			_multiplierInfoLabel.setCharacterSize( 15 );
 

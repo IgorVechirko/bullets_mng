@@ -20,7 +20,7 @@ namespace BulletsMng
 		const auto& Xrange = std::minmax( s1.x, s2.x );
 		const auto& Yrange = std::minmax( s1.y, s2.y );
 
-		auto epsilon = 0.001f;
+		auto epsilon = std::numeric_limits<float>::epsilon();
 		
 		return Xrange.first - epsilon <= point.x && Xrange.second + epsilon >= point.x && Yrange.first - epsilon <= point.y && Yrange.second + epsilon >= point.y;
 	}
@@ -44,12 +44,14 @@ namespace BulletsMng
 
 		if ( !shotedBullets.empty() )
 		{
-			std::remove_if( _waitStartFlyBullets.begin(), _waitStartFlyBullets.end(), [](Bullet& bullet){
+			std::remove_if( _waitStartFlyBullets.begin(), _waitStartFlyBullets.end(), [](const Bullet& bullet) -> bool {
 				return bullet.remove;		
 			} );
 			_waitStartFlyBullets.resize( _waitStartFlyBullets.size() - shotedBullets.size() );
 		}
 		lock.unlock();
+
+		Collision* newBulletsEarliestCollision = nullptr;
 
 		for( auto& bullet : shotedBullets )
 		{
@@ -57,12 +59,19 @@ namespace BulletsMng
 
 			if ( !bullet.sortedFutureCollisions.empty() )
 			{
-				if ( !_earliestCollision.exist() || ( _earliestCollision.time >= bullet.sortedFutureCollisions.front().time  ) )
+				if ( !newBulletsEarliestCollision || ( newBulletsEarliestCollision->time >= bullet.sortedFutureCollisions.front().time  ) )
 				{
-					_earliestCollision = bullet.sortedFutureCollisions.front();// copy data
+					newBulletsEarliestCollision = &bullet.sortedFutureCollisions.front();
 				}
 			}
 		}
+
+		if( newBulletsEarliestCollision )
+		{
+			if ( !_earliestCollision.exist() || _earliestCollision.time > newBulletsEarliestCollision->time )
+				_earliestCollision = *newBulletsEarliestCollision;
+		}
+
 
 		for( auto listener : _listeners )
 		{
@@ -92,25 +101,6 @@ namespace BulletsMng
 		}
 
 		std::move( shotedBullets.begin(), shotedBullets.end(), std::inserter( _flyingBullets,_flyingBullets.end() ) );
-	}
-	BulletsManager::Collision BulletsManager::getBulletEarliestCollision( Bullet& bullet )
-	{
-		Collision result;
-
-		while( !bullet.sortedFutureCollisions.empty() )
-		{
-			if ( isWallExist( bullet.sortedFutureCollisions.front().wallID ) )
-			{
-				result = bullet.sortedFutureCollisions.front();
-				break;
-			}
-			else
-			{
-				bullet.sortedFutureCollisions.pop_front();
-			}
-		}
-
-		return result;
 	}
 	void BulletsManager::calculateBulletFutureCollisions( Bullet& bullet )
 	{
@@ -224,6 +214,39 @@ namespace BulletsMng
 				listener->onWallDeleted( removedWallId );
 		}
 	}
+	void BulletsManager::findEarliestCollision()
+	{
+		Collision* earliestCollistion = nullptr;
+
+		for( auto& bullet : _flyingBullets )
+		{
+			Collision* earliestCollistionForBullet = nullptr;
+
+			while( !bullet.sortedFutureCollisions.empty() )
+			{
+				if ( isWallExist( bullet.sortedFutureCollisions.front().wallID ) )
+				{
+					earliestCollistionForBullet = &bullet.sortedFutureCollisions.front();
+					break;
+				}
+				else
+				{
+					bullet.sortedFutureCollisions.pop_front();
+				}
+			}
+				
+			if ( earliestCollistionForBullet )
+			{
+				if ( !earliestCollistion || earliestCollistion->time > earliestCollistionForBullet->time )
+				{
+					earliestCollistion = earliestCollistionForBullet;
+				}
+			}
+		}
+
+		if ( earliestCollistion )
+			_earliestCollision = *earliestCollistion;
+	}
 	void BulletsManager::addBulletsManagerListener( BulletsManagerListener* lst )
 	{
 		if ( lst )
@@ -302,18 +325,7 @@ namespace BulletsMng
 			doCollision( _earliestCollision );
 			_earliestCollision.reset();
 
-			for( auto& bullet : _flyingBullets )
-			{
-				const auto& earliestCollistionForBullet = getBulletEarliestCollision( bullet );//copy data;
-					
-				if ( earliestCollistionForBullet.exist() )
-				{
-					if ( !_earliestCollision.exist() || _earliestCollision.time > earliestCollistionForBullet.time )
-					{
-						_earliestCollision = earliestCollistionForBullet;
-					}
-				}
-			}
+			findEarliestCollision();
 		}
 
 		moveBulletsLinearTillTime( _time );	
