@@ -29,10 +29,10 @@ namespace BulletsMng
 
 		Point* _earliestCollision;
 
-		std::vector<std::unique_ptr<std::thread>> _shotedThreads;
-
 		sf::Text _multiplierInfoLabel;
 		sf::Font _font;
+
+		std::vector<std::unique_ptr<std::thread>> _shotedThreads;
 
 
 		void returnToSetupScene();

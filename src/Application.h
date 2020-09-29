@@ -30,14 +30,6 @@ namespace BulletsMng
 
 	protected:
 
-		template<typename T>
-		T* createScene()
-		{
-			auto scene = new T(this);
-			return scene;
-		}
-
-
 		virtual void switchToScene( const std::string& newSceneID, const std::map<std::string,std::string>& newSceneParams = std::map<std::string,std::string>() ) override;
 		virtual sf::Vector2u getWindowSize() const override;
 
