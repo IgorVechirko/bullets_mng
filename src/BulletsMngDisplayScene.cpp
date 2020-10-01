@@ -20,13 +20,13 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::returnToSetupScene()
 	{
+		if ( _bulletsGenThread->joinable() )
+			_bulletsGenThread->join();
+
 		getApplication()->switchToScene( "setup" );
 	}
 	void BulletsMngDisplayScene::generateWalls()
 	{
-		//_bulletsMng.addWall( glm::vec2( getApplication()->getWindowSize().y * 1.3f, 0.0f ), glm::vec2( 0.0f, getApplication()->getWindowSize().y * 1.3f ) );
-		//_bulletsMng.addWall( glm::vec2( 0.0f, 200.0f ), glm::vec2( 1124.0f, 200.0f ) );
-
 		std::default_random_engine dre;
 		std::uniform_real_distribution<float> xGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().x) );
 		std::uniform_real_distribution<float> yGen( 0.0f, static_cast<float>(getApplication()->getWindowSize().y) );
@@ -36,8 +36,6 @@ namespace BulletsMng
 	}
 	void BulletsMngDisplayScene::generateBullets()
 	{
-		//glm::vec2 startPos( getApplication()->getWindowSize().x / 2.0f, getApplication()->getWindowSize().y / 2.0f );
-		//_bulletsMng.fire( startPos, glm::vec2( 1.0f, 0.0f ), 500.0f, 2.0f, 10.0f );
 
 		auto threadFunc = [](int bulletsAmount, BulletsManager& mng, glm::vec2 winSize){
 
@@ -70,7 +68,7 @@ namespace BulletsMng
 		glm::vec2 winSize( getApplication()->getWindowSize().x, getApplication()->getWindowSize().y );
 		
 		auto thread = new std::thread( threadFunc, _bulletsAmount, std::ref(_bulletsMng), winSize );
-		thread->detach();
+		//->detach();
 
 		_bulletsGenThread = std::unique_ptr<std::thread>(thread);
 	}
